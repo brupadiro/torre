@@ -6,7 +6,7 @@
           <v-row no-gutters>
             <v-col class="col-2 col-md-2">
               <v-avatar>
-                <v-img :src="job.organizations[0].picture"></v-img>
+                <v-img :src="job.organizations[0].picture" width="100%"></v-img>
               </v-avatar>
             </v-col>
             <v-col class="col-6 col-md-6">
@@ -51,7 +51,7 @@
                     <v-icon class="primary--text" size="16">mdi-thumb-up</v-icon>
                 </v-btn>
                 <v-btn class="ml-2 primary--text">HACER UNA PREGUNTA</v-btn>
-                <v-btn class="ml-2 black--text lighen-1" color="primary">VER</v-btn>
+                <v-btn class="ml-2 black--text lighen-1" color="primary" :to="`/jobs/${job.id}`">VER</v-btn>
             </v-col>
           </v-row>
         </v-col>
