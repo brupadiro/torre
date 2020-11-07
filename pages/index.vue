@@ -1,89 +1,46 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+  <v-container fluid fill-height class="d-flex align-center">
+    <v-app-bar fixed app class="d-flex justify-space-around" width="100%">
+      <template v-slot:default>
+        <v-tabs align-with-title grow>
+          <v-tab>Personas</v-tab>
+          <v-tab>Trabajos</v-tab>
+        </v-tabs>
+
+      </template>
+    </v-app-bar>
+    <v-row>
+      <v-col class="col-md-12 col-12 d-flex justify-center">
+        <img src="/torre.png">
+      </v-col>
+      <v-col class="col-md-3 col-12"></v-col>
+      <v-col class="col-md-6 col-12">
+        <searchBarJobs></searchBarJobs>
+      </v-col>
+      <v-col class="col-md-3 col-12"></v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+  import Logo from '~/components/Logo.vue'
+  import searchBarJobs from '~/components/searchBarJobs.vue'
 
-export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  export default {
+    components: {
+      Logo,
+      searchBarJobs
+    }
   }
-}
+
 </script>
+
+<style scoped>
+  .center-img {
+    margin: 0 auto;
+  }
+
+  .v-toolbar__content {
+    width: 90%;
+  }
+</style>
