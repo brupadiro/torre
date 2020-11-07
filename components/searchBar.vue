@@ -75,8 +75,10 @@
       }
     },
     watch: {
-      '$route.query.q':function(val) {
-        this.tags = val.split(' AND ')
+      '$route.query.q':function(params) {
+        if(params) { 
+          this.tags = params.split(' AND ')
+        }
       },
       tags:{
         handler(val) {

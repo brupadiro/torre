@@ -1,5 +1,5 @@
 <template>
-  <section class="fill-height">
+  <div class="fill-height">
     <v-app-bar app class="elevation-1">
       <v-toolbar-title>Buscar</v-toolbar-title>
       <template v-slot:extension>
@@ -10,67 +10,11 @@
       </template>
     </v-app-bar>
     <div class="section-search">
-      <v-navigation-drawer permanent min-width="412px" width="412PX">
-        <h2 class="search-filters-title mt-2">Buscar trabajos por</h2>
-        <v-list dense>
-          <v-subheader class="font-weight-normal pl-4 text-subtitle-1">Estado</v-subheader>
-          <v-list-item-group >
-            <v-list-item v-for="(status, i) in aggregators.status" :key="i" @click="pushToURL(`status:${status.value}`)">
-              <v-list-item-content>
-                <v-list-item-title class="primary--text font-weight-light">
-                  {{(status.value=='closed') ? 'Cerrado':'Abierto'}} ({{status.total}}) +
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        <v-list dense>
-          <v-subheader class="font-weight-normal pl-4 text-subtitle-1">Salario deseado</v-subheader>
-          <v-list-item-group >
-            <v-list-item v-for="(status, i) in aggregators.compensationrange" :key="i" @click="pushToURL(`compensationrange:${status.value}`)">
-              <v-list-item-content>
-                <v-list-item-title class="primary--text font-weight-light">
-                  {{status.value.replace('hourly','hora')}} ({{status.total}}) +
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        <v-list dense>
-          <v-subheader class="font-weight-normal pl-4 text-subtitle-1">Tipo de trabajo</v-subheader>
-          <v-list-item-group >
-            <v-list-item v-for="(status, i) in aggregators.type" :key="i" @click="pushToURL(`type:${status.value}`)">
-              <v-list-item-content>
-                <v-list-item-title class="primary--text font-weight-light">
-                  {{jobType(status.value)}} ({{status.total}}) +
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        <v-list dense>
-          <v-subheader class="font-weight-normal pl-4 text-subtitle-1">Organizacion(es)</v-subheader>
-          <v-list-item-group >
-            <v-list-item v-for="(status, i) in organizations" :key="i" @click="pushToURL(`type:${status.value}`)">
-              <v-list-item-content>
-                <v-list-item-title class="primary--text font-weight-light">
-                  {{status.value}} ({{status.total}}) +
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title class="primary--text font-weight-bold" @click="limitOrganizations+=6">
-                  VER MAS
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
-          </v-list-item-group>
-        </v-list>
-
+      <v-navigation-drawer permanent fixed min-width="412px" width="412PX" class=section-sidebar>
+        <sidebar-search-filters :aggregators="aggregators" :loadingAggregators="loadingAggregators">
+        </sidebar-search-filters>
       </v-navigation-drawer>
-      <v-container v-if="$route.query.q">
+      <v-container v-if="$route.query.q" class="section-main">
         <v-row>
           <v-col class="col-12 col-md-12">
             <search-bar label="Buscar trabajos...">
@@ -91,7 +35,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-container fill-height align-center v-else>
+      <v-container fill-height align-center v-else class="section-main">
         <v-row>
           <v-col class="col-md-2 col-12"></v-col>
           <v-col class="col-12 col-md-8">
@@ -115,14 +59,16 @@
         </v-row>
       </v-container>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
+  import sidebarSearchFilters from '~/components/sidebarSearchFilters.vue'
   import searchBar from '~/components/searchBar.vue'
 
   export default {
     components: {
+      sidebarSearchFilters,
       searchBar,
     },
     data() {
@@ -130,9 +76,9 @@
         page: 1,
         jobs: {},
         aggregators: {
-          organization:[]
+          organization: []
         },
-        limitOrganizations:6
+        loadingAggregators: false,
       }
     },
     created() {
@@ -149,31 +95,15 @@
         })
       },
       findAgreggators() {
+        this.loadingAggregators = true
         this.$axios.post(
           `https://search.torre.co/opportunities/_search/?offset=${this.offsetPage}&size=${this.sizePage}&page=${this.page}&aggregate=true`, {
             and: this.searchParams
           }).then((data) => {
           this.aggregators = data.data.aggregators
+          this.loadingAggregators = false
         })
       },
-      jobType(type) {
-        switch(type) {
-          case 'full-time-employment':return 'Empleo a tiempo completo'
-          break
-          case 'freelance-gigs':return 'Trabajos temporales/freelance'
-          break
-          case 'part-time-employment':return 'Empleo a medio tiempo'
-          break
-          case 'internships':return 'Pasantias'
-          break
-        }
-      },
-      pushToURL(param) {
-        let q = this.$route.query.q 
-        q = `${q} AND ${param}`
-        console.log(q)
-        this.$router.push(`/search/jobs/?q=${q}`)
-      }
     },
     computed: {
       offsetPage() {
@@ -195,12 +125,9 @@
         }
         return urlsParams
       },
-      '$route.query.q':function(val) {
+      '$route.query.q': function (val) {
         this.findJobs()
       },
-      organizations() {
-        return this.aggregators.organization.slice(0,this.limitOrganizations)
-      }
     }
   }
 
@@ -216,14 +143,14 @@
     background: transparent;
   }
 
-  .search-filters-title {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: .005em;
-    line-height: 28px;
-    background: hsla(0, 0%, 100%, .06);
-    margin: 0;
-    padding: 12px 16px;
+
+  .section-sidebar {
+    margin-top: 112px !important;
+    height: calc(100% - 112px)!important;
+  }
+
+  .section-main {
+    margin-left: 412px;
   }
 
 </style>

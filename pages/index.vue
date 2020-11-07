@@ -78,8 +78,7 @@
 
   export default {
     components: {
-      Logo,
-      searchBarJobs,
+      searchBar,
     },
     data() {
       return {
