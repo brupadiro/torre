@@ -3,7 +3,7 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-combobox dense prepend-inner-icon="mdi-briefcase-search" @change="updateLastChip()" class="search-input rounded-pill" rounded :prepend-inner="'wola'" return-object
-        hide-details v-model="tags" chips clearable :label="(checkLabelCondition) ? 'Buscar trabajos':''"
+        hide-details v-model="tags" chips clearable :label="(checkLabelCondition) ? label:''"
           v-on="on" outlined multiple>
           <template v-slot:selection="{ attrs, item, select, selected }">
             <v-chip v-bind="attrs" :input-value="selected" close small class="font-weight-light">
@@ -19,22 +19,16 @@
           </template>
         </v-combobox>
       </template>
-      <v-list>
-        <v-list-item>
-          <v-list-item-title class="font-weight-light" @click="searchArea = 'Job/Skill:'">Job/Skill:
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-title class="font-weight-light" @click="searchArea = 'Organization:'">Organization:
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
+     <slot :setSearchArea="setSearchArea"></slot>
     </v-menu>
   </v-input>
 </template>
 
 <script>
   export default {
+    props:{
+      label:String
+    },
     data() {
       return {
         search: {
@@ -56,6 +50,9 @@
         let index = this.indexEditable(item)
         this.$set(this.editable, index, true)
 
+      },
+      setSearchArea(area) {
+        this.searchArea = area
       },
       updateLastChip() {
         let indexLast = this.tags.length - 1
