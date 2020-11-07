@@ -33,14 +33,14 @@
           <div v-show="filterSkills('1-plus-year').length>0">
             <p class="grey--text text--lighten-1">+1 año de experiencia</p>
             <v-row>
-              <v-chip v-for="skill in filterSkills('1-plus-year')" class="mr-2 font-weight-light">{{skill.name}}
+              <v-chip v-for="skill in filterSkills('1-plus-year')" class="mr-2 font-weight-light mb-1" :key="skill.id">{{skill.name}}
               </v-chip>
             </v-row>
           </div>
           <div v-show="filterSkills('potential-to-develop').length>0">
             <p class="grey--text text--lighten-1">Debe tener interés aunque no experiencia</p>
             <v-row>
-              <v-chip v-for="skill in filterSkills('potential-to-develop')" class="mr-2 font-weight-light">
+              <v-chip v-for="skill in filterSkills('potential-to-develop')" class="mr-2 font-weight-light mb-1" :key="skill.id">
                 {{skill.name}}
               </v-chip>
             </v-row>
@@ -84,7 +84,7 @@
         </v-card-text>
         <v-card-text>
           <v-row>
-            <v-col class="col-md-4 col-sm-4 col-12" v-for="member in job.members">
+            <v-col class="col-md-4 col-sm-4 col-12" v-for="member in job.members" :key="member.id">
               <v-card class="rounded-lg team-card" flat>
                 <v-card-title class="d-flex justify-center">
                   <span class="caption text-center font-weight-light grey--text text--lighten-1">You’d be working
@@ -116,18 +116,18 @@
           </v-row>
         </v-card-text>
       </div>
-      <v-card-text v-for="detail in job.details" class="detail-container mb-6">
+      <v-card-text v-for="detail in job.details" class="detail-container mb-6" :key="detail.code">
         <h3 class="primary--text font-weight-light mb-2">{{titleDetails(detail.code)}}</h3>
         <p class="detail-content font-weight-light">{{detail.content}}</p>
       </v-card-text>
       <v-card-text class="owner-info detail-container">
         <v-row no-gutters class="d-flex align-center">
-          <v-col class="col-md-2 col-2 d-flex justify-center">
+          <v-col class="col-md-2 col-3 d-flex justify-center">
             <v-avatar size="60">
               <v-img :src="job.owner.picture" width="100%"></v-img>
             </v-avatar>
           </v-col>
-          <v-col class="col-md-10 col-10">
+          <v-col class="col-md-10 col-9">
             <h3 class="primary--text font-weight-light mb-3">{{job.owner.name}}</h3>
             <p class="member-team-title font-weight-light">{{job.owner.professionalHeadline}}</p>
 
@@ -161,6 +161,7 @@
           })
       },
       filterSkills(type) {
+        //Filter skills by objective
         return this.job.strengths.filter((strength) => {
           console.log(strength.experience, type)
           if (strength.experience == type) {
@@ -169,6 +170,7 @@
         })
       },
       jobType(type) {
+        //Translate Job type
         switch (type) {
           case 'full-time-employment':
             return 'Empleo a tiempo completo'
@@ -185,6 +187,7 @@
         }
       },
       setPlace() {
+        //Setting place from job
         if (this.job.place.remote) {
           return 'Remote'
         } else {
@@ -192,6 +195,7 @@
         }
       },
       setTimeZone() {
+        //Setting TimeZone
         if (this.job.place.timezone) {
           return 'Remote'
         } else {
@@ -199,6 +203,7 @@
         }
       },
       titleDetails(code) {
+        //Set title from details from job by code
         switch (code) {
           case 'reason':
             return 'Why this opportunity exists'

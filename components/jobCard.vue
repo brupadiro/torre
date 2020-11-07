@@ -6,13 +6,13 @@
           <v-row no-gutters>
             <v-col class="col-2 col-md-2">
               <v-avatar>
-                <v-img :src="job.organizations[0].picture" width="100%"></v-img>
+                <v-img v-if="job.organizations[0]" :src="job.organizations[0].picture" width="100%"></v-img>
               </v-avatar>
             </v-col>
             <v-col class="col-6 col-md-6">
               <h5 class="primary--text font-weight-light mb-2">{{job.objective}}</h5>
               <span class="font-weight-light grey--text text--lighten-1  caption mb-2">{{job.type}}</span>
-              <span class="font-weight-light grey--text text--lighten-1  caption">{{job.organizations[0].name}}</span>
+              <span class="font-weight-light grey--text text--lighten-1  caption" v-if="job.organizations[0]">{{job.organizations[0].name}}</span>
             </v-col>
             <v-col class="col-md-4 col-4"></v-col>
           </v-row>

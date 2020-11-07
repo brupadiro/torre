@@ -4,7 +4,12 @@
       <v-progress-circular indeterminate color="primary" size="100"></v-progress-circular>
     </div>
     <div v-else>
-      <h2 class="search-filters-title mt-2">Buscar trabajos por</h2>
+      <v-toolbar elevation="0" color="grey darken-4">
+        <v-btn icon @click="closeFilters()" class="hidden-md-and-up">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-toolbar-title class="search-filters-title">Buscar trabajos por</v-toolbar-title>
+      </v-toolbar>
       <v-list dense v-show="!findCoincidencesInSearch('status')">
         <v-subheader class="font-weight-normal pl-4 text-subtitle-1">Estado</v-subheader>
         <v-list-item-group>
@@ -77,6 +82,7 @@
       }
     },
     methods: {
+      //Set job type by type
       jobType(type) {
         switch (type) {
           case 'full-time-employment':
@@ -94,6 +100,7 @@
         }
       },
       pushToURL(param) {
+      //Pushing params to url
         let q = this.$route.query.q
         if (q) {
           q = `${q} AND ${param}`
@@ -101,9 +108,14 @@
           q = param
         }
         this.$router.push(`/search/jobs/?q=${q}`)
+        this.$emit('closeFilters',true)
       },
       findCoincidencesInSearch(param) {
-        return (this.$route.query.q.indexOf(param) != -1)
+      //Finding previous param in url
+        return (this.$route.query.q!=undefined && this.$route.query.q.indexOf(param) != -1)
+      },
+      closeFilters() {
+        this.$emit('closeFilters',true)
       }
     },
     computed: {
@@ -121,7 +133,6 @@
     font-weight: 600;
     letter-spacing: .005em;
     line-height: 28px;
-    background: hsla(0, 0%, 100%, .06);
     margin: 0;
     padding: 12px 16px;
   }
