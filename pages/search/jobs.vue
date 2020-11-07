@@ -34,6 +34,11 @@
             </search-bar>
           </v-col>
         </v-row>
+        <v-row class="justify-center">
+          <v-col class="col-12 col-md-7" v-for="job in jobs.results" :key="job.id">
+            <job-card :job="job"></job-card>
+          </v-col>
+        </v-row>
       </v-container>
       <v-container fill-height align-center v-else class="section-main">
         <v-row>
@@ -65,11 +70,13 @@
 <script>
   import sidebarSearchFilters from '~/components/sidebarSearchFilters.vue'
   import searchBar from '~/components/searchBar.vue'
+  import jobCard from '~/components/jobCard.vue'
 
   export default {
     components: {
       sidebarSearchFilters,
       searchBar,
+      jobCard
     },
     data() {
       return {
@@ -146,7 +153,7 @@
 
   .section-sidebar {
     margin-top: 112px !important;
-    height: calc(100% - 112px)!important;
+    height: calc(100% - 112px) !important;
   }
 
   .section-main {
